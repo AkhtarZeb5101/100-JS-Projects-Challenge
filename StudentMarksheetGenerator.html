@@ -1,240 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Marksheet Generator by XeB</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marksheet Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ececec; /* Light grey background */
-      color: #333;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
 
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: #ffffff; /* White background for the container */
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
 
-    h1 {
-      text-align: center;
-      color: #2196F3; /* Blue color for the header */
-      margin-bottom: 1rem;
-    }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
 
-    h2 {
-      color: #333;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #2196F3; /* Blue underline */
-      display: inline-block;
-    }
+        body.dark-mode .container {
+            background: #2d3748;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
 
-    form {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
+        h1 {
+            text-align: center;
+            color: #3b82f6;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
 
-    .entry-section, .total-section {
-      width: 48%;
-    }
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
 
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    .marks label, .marks input {
-      display: inline-block;
-      width: 48%;
-    }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
 
-    .total-section {
-      text-align: center;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
 
-    .total {
-      font-size: 2rem;
-      color: #2196F3; /* Blue color for total marks */
-    }
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
 
-    button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      background: #2196F3; /* Blue background for buttons */
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
 
-    button:hover {
-      background: #1976D2; /* Darker blue on hover */
-    }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
 
-    .result-section {
-      margin-top: 2rem;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #f0f8ff; /* Light blue background for the result section */
-    }
+        .section {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
 
-    .student-info, .marks-info {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-    }
+        body.dark-mode .section {
+            background: #4a5568;
+        }
 
-    .student-info div, .marks-info div {
-      width: 48%;
-      padding: 1rem;
-      border: 1px solid #2196F3; /* Blue border for student and marks info */
-      border-radius: 5px;
-      background: #e3f2fd; /* Very light blue background for each section */
-    }
+        h2 {
+            color: #3b82f6;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
 
-    .marks-info {
-      text-align: center;
-    }
+        .input-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    .marks-info p {
-      margin: 0.5rem 0;
-    }
-  </style>
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .subject-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .subject-group input[type="text"] {
+            flex: 2;
+        }
+
+        .subject-group input[type="number"] {
+            flex: 1;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #dc2626;
+        }
+
+        #addSubjectBtn {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        #addSubjectBtn:hover {
+            background: #059669;
+        }
+
+        .total-display {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .total-number {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        .buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .result-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .result-section {
+            background: #4a5568;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .result-item {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .result-item {
+            background: #718096;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            .subject-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Student Marksheet Generator</h1>
-    <form id="marksheetForm">
-      <div class="entry-section">
-        <h2>Entry Form</h2>
-        <label for="studentName">Student Name:</label>
-        <input type="text" id="studentName" placeholder="Enter student name" required>
-
-        <label for="regNumber">Registration No. (10 digits):</label>
-        <input type="text" id="regNumber" placeholder="Enter registration number" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" required>
-
-        <div class="marks">
-          <label for="maths">Maths:</label>
-          <input type="number" id="maths" max="99" min="0" value="" required>
-
-          <label for="science">Science:</label>
-          <input type="number" id="science" max="99" min="0" value="" required>
-
-          <label for="sst">S. Studies:</label>
-          <input type="number" id="sst" max="99" min="0" value="" required>
-
-          <label for="language1">1st Language:</label>
-          <input type="number" id="language1" max="99" min="0" value="" required>
-
-          <label for="language2">2nd Language:</label>
-          <input type="number" id="language2" max="99" min="0" value="" required>
+    <div class="container">
+        <div class="header-controls">
+            <h1>Student Marksheet Generator</h1>
+            <label class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
-      </div>
-      <div class="total-section">
-        <h2>Total Marks</h2>
-        <div class="total">
-          <p id="obtainedMarks">0</p>
-          <span>/</span>
-          <p>500</p>
+
+        <form id="marksheetForm">
+            <div class="section">
+                <h2>Student Details</h2>
+                <div class="input-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" placeholder="Enter student name" required>
+                </div>
+                <div class="input-group">
+                    <label for="regNumber">Registration Number</label>
+                    <input type="text" id="regNumber" placeholder="Enter 10-digit registration number"
+                           pattern="\d{10}" title="Please enter exactly 10 digits" required>
+                </div>
+                <div class="input-group">
+                    <label for="class">Class/Grade</label>
+                    <input type="text" id="class" placeholder="e.g., 10th Grade" required>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Subject Marks</h2>
+                <div id="subjectsContainer">
+                    <!-- Dynamic subjects will be added here -->
+                </div>
+                <button type="button" id="addSubjectBtn">Add Subject</button>
+            </div>
+
+            <div class="total-display">
+                <h2>Total Marks</h2>
+                <div class="total-number" id="obtainedMarks">0</div>
+                <span id="totalPossibleMarks">/ 0</span>
+            </div>
+
+            <div class="buttons">
+                <button type="button" class="btn-primary" id="submitBtn">Generate Marksheet</button>
+                <button type="reset" class="btn-secondary" id="clearBtn">Clear</button>
+            </div>
+        </form>
+
+        <div class="result-section" id="resultSection">
+            <h2>Marksheet Preview</h2>
+            <div class="result-grid">
+                <div class="result-item"><p id="studentNameDisplay"></p></div>
+                <div class="result-item"><p id="regNumberDisplay"></p></div>
+                <div class="result-item"><p id="classDisplay"></p></div>
+                <div class="result-item"><p id="percentageDisplay"></p></div>
+                <div class="result-item"><p id="gradeDisplay"></p></div>
+                <div class="result-item"><p id="dateDisplay">Date: February 23, 2025</p></div>
+            </div>
         </div>
-      </div>
-      <button id="submitBtn">Submit</button>
-      <button type="reset" id="clearBtn">Clear</button>
-    </form>
-    <div class="result-section">
-      <h2>Result Preview</h2>
-      <div class="student-info">
-        <div><p id="studentNameDisplay"></p></div>
-        <div><p id="regNumberDisplay"></p></div>
-      </div>
-      <div class="marks-info">
-        <div><p id="percentageDisplay"></p></div>
-        <div><p id="gradeDisplay"></p></div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    const marksheetForm = document.getElementById('marksheetForm');
-    const obtainedMarks = document.getElementById('obtainedMarks');
-    const studentNameDisplay = document.getElementById('studentNameDisplay');
-    const regNumberDisplay = document.getElementById('regNumberDisplay');
-    const percentageDisplay = document.getElementById('percentageDisplay');
-    const gradeDisplay = document.getElementById('gradeDisplay');
-    const submitBtn = document.getElementById('submitBtn');
+    <script>
+        const marksheetForm = document.getElementById('marksheetForm');
+        const subjectsContainer = document.getElementById('subjectsContainer');
+        const obtainedMarks = document.getElementById('obtainedMarks');
+        const totalPossibleMarks = document.getElementById('totalPossibleMarks');
+        const studentNameDisplay = document.getElementById('studentNameDisplay');
+        const regNumberDisplay = document.getElementById('regNumberDisplay');
+        const classDisplay = document.getElementById('classDisplay');
+        const percentageDisplay = document.getElementById('percentageDisplay');
+        const gradeDisplay = document.getElementById('gradeDisplay');
+        const submitBtn = document.getElementById('submitBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const addSubjectBtn = document.getElementById('addSubjectBtn');
+        const darkModeToggle = document.getElementById('darkModeToggle');
 
-    function calculateTotalMarks() {
-      const maths = parseInt(document.getElementById('maths').value) || 0;
-      const science = parseInt(document.getElementById('science').value) || 0;
-      const sst = parseInt(document.getElementById('sst').value) || 0;
-      const language1 = parseInt(document.getElementById('language1').value) || 0;
-      const language2 = parseInt(document.getElementById('language2').value) || 0;
+        let subjectCount = 0;
 
-      const total = maths + science + sst + language1 + language2;
-      obtainedMarks.textContent = total;
+        function addSubject(name = '', marks = '', maxMarks = '100') {
+            subjectCount++;
+            const subjectDiv = document.createElement('div');
+            subjectDiv.className = 'input-group subject-group';
+            subjectDiv.innerHTML = `
+                <input type="text" class="subject-name" placeholder="Subject Name" value="${name}" required>
+                <input type="number" class="subject-marks" placeholder="Marks" value="${marks}" min="0" required>
+                <input type="number" class="subject-max" placeholder="Max Marks" value="${maxMarks}" min="1" required>
+                <button type="button" class="remove-btn">Remove</button>
+            `;
+            subjectsContainer.appendChild(subjectDiv);
 
-      const percentage = (total / 500) * 100;
-      percentageDisplay.textContent = `Percentage: ${percentage.toFixed(2)}%`;
+            subjectDiv.querySelector('.remove-btn').addEventListener('click', () => {
+                subjectsContainer.removeChild(subjectDiv);
+                calculateTotalMarks();
+            });
 
-      let grade;
-      if (percentage >= 90) {
-        grade = 'A+';
-      } else if (percentage >= 80) {
-        grade = 'A';
-      } else if (percentage >= 70) {
-        grade = 'B';
-      } else if (percentage >= 60) {
-        grade = 'C';
-      } else if (percentage >= 50) {
-        grade = 'D';
-      } else {
-        grade = 'F';
-      }
-      gradeDisplay.textContent = `Grade: ${grade}`;
-    }
+            subjectDiv.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calculateTotalMarks);
+            });
 
-    function displayStudentInfo() {
-      const studentName = document.getElementById('studentName').value;
-      const regNumber = document.getElementById('regNumber').value;
-      studentNameDisplay.textContent = `Name: ${studentName}`;
-      regNumberDisplay.textContent = `Reg. No: ${regNumber}`;
-    }
+            calculateTotalMarks();
+        }
 
-    marksheetForm.addEventListener('input', calculateTotalMarks);
+        function calculateTotalMarks() {
+            const subjects = subjectsContainer.querySelectorAll('.subject-group');
+            let totalObtained = 0;
+            let totalPossible = 0;
 
-    submitBtn.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent form submission
-      displayStudentInfo();
-    });
+            subjects.forEach(subject => {
+                const marks = parseInt(subject.querySelector('.subject-marks').value) || 0;
+                const maxMarks = parseInt(subject.querySelector('.subject-max').value) || 0;
+                totalObtained += Math.min(marks, maxMarks); // Cap marks at max
+                totalPossible += maxMarks;
+            });
 
-    document.getElementById('clearBtn').addEventListener('click', function() {
-      obtainedMarks.textContent = '0';
-      percentageDisplay.textContent = '';
-      gradeDisplay.textContent = '';
-      studentNameDisplay.textContent = '';
-      regNumberDisplay.textContent = '';
-    });
-  </script>
+            obtainedMarks.textContent = totalObtained;
+            totalPossibleMarks.textContent = `/ ${totalPossible}`;
+
+            const percentage = totalPossible > 0 ? (totalObtained / totalPossible) * 100 : 0;
+            percentageDisplay.textContent = `Percentage: ${percentage.toFixed(2)}%`;
+
+            let grade;
+            if (percentage >= 90) grade = 'A+';
+            else if (percentage >= 80) grade = 'A';
+            else if (percentage >= 70) grade = 'B';
+            else if (percentage >= 60) grade = 'C';
+            else if (percentage >= 50) grade = 'D';
+            else grade = 'F';
+            gradeDisplay.textContent = `Grade: ${grade}`;
+        }
+
+        function displayStudentInfo() {
+            const studentName = document.getElementById('studentName').value;
+            const regNumber = document.getElementById('regNumber').value;
+            const studentClass = document.getElementById('class').value;
+            studentNameDisplay.textContent = `Name: ${studentName}`;
+            regNumberDisplay.textContent = `Reg. No: ${regNumber}`;
+            classDisplay.textContent = `Class: ${studentClass}`;
+        }
+
+        // Add initial subject
+        addSubject();
+
+        addSubjectBtn.addEventListener('click', () => addSubject());
+
+        marksheetForm.addEventListener('input', calculateTotalMarks);
+
+        submitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (marksheetForm.checkValidity()) {
+                displayStudentInfo();
+            } else {
+                marksheetForm.reportValidity();
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            obtainedMarks.textContent = '0';
+            totalPossibleMarks.textContent = '/ 0';
+            percentageDisplay.textContent = '';
+            gradeDisplay.textContent = '';
+            studentNameDisplay.textContent = '';
+            regNumberDisplay.textContent = '';
+            classDisplay.textContent = '';
+            subjectsContainer.innerHTML = '';
+            addSubject(); // Add one subject back after clearing
+        });
+
+        darkModeToggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
 </body>
 </html>

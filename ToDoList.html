@@ -1,204 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My To-Do List</title>
+    <title>Modern To-Do List</title>
     <style>
-        /* Basic layout and background */
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #00AEEF, #48AEF0);
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Styling for the to-do list container */
-        .todo-container {
-            background-color: #fff;
-            width: 380px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            padding: 30px;
-            text-align: center;
-        }
-
-        /* To-Do List Heading */
-        h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #2d3b55;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        /* The input and button section */
-        .input-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s ease-in-out;
-        }
-
-        input[type="text"]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-
-        button {
-            padding: 12px 25px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
-
-        /* Task list and individual task styling */
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        li:hover {
-            background-color: #e9ecef;
-        }
-
-        span {
-            font-size: 16px;
+            align-items: flex-start;
+            padding: 20px;
             color: #333;
         }
 
-        .completed {
-            text-decoration: line-through;
-            color: #888;
+        .todo-container {
+            background: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
-        .delete-btn {
-            background-color: transparent;
-            color: #ff4d4d;
+        h1 {
+            font-size: 28px;
+            color: #1e3c72;
+            margin: 0 0 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            background: #00cc99;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .input-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .task-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"], input[type="date"], select {
+            padding: 12px 15px;
             border: none;
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f4f7fa;
+            outline: none;
+            transition: box-shadow 0.3s ease;
         }
 
-        .delete-btn:hover {
-            transform: scale(1.1);
+        input[type="text"]:focus, input[type="date"]:focus, select:focus {
+            box-shadow: 0 0 8px rgba(0, 204, 153, 0.3);
+        }
+
+        select {
+            appearance: none;
+            padding-right: 30px;
+            background: #f4f7fa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%231e3c72" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #00cc99;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background: #00b386;
+            transform: translateY(-2px);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .task-text {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .task-meta {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .completed .task-text {
+            text-decoration: line-through;
+            color: #aaa;
         }
 
         input[type="checkbox"] {
-            transform: scale(1.3);
             margin-right: 15px;
+            accent-color: #00cc99;
+            transform: scale(1.2);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 18px;
             cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .delete-btn:hover {
+            color: #e60000;
         }
     </style>
 </head>
-
 <body>
     <div class="todo-container">
         <h1>My To-Do List</h1>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
         <div class="input-container">
-            <input type="text" id="taskInput" placeholder="Add a new task" />
-            <button id="addTaskBtn">Add Task</button>
+            <div class="task-input-wrapper">
+                <input type="text" id="taskInput" placeholder="Add a new task">
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="dueDate">
+                    <select id="category">
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+            <button id="addTaskBtn">Add</button>
         </div>
         <ul id="taskList"></ul>
     </div>
 
     <script>
-        // Cache the important DOM elements
-        const taskInput = document.getElementById("taskInput");
-        const addTaskBtn = document.getElementById("addTaskBtn");
-        const taskList = document.getElementById("taskList");
+        const taskInput = document.getElementById('taskInput');
+        const dueDateInput = document.getElementById('dueDate');
+        const categorySelect = document.getElementById('category');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const progress = document.querySelector('.progress');
 
-        // Function to load tasks from localStorage
+        function updateProgress() {
+            const totalTasks = taskList.children.length;
+            const completedTasks = document.querySelectorAll('.completed').length;
+            const percentage = totalTasks ? (completedTasks / totalTasks) * 100 : 0;
+            progress.style.width = `${percentage}%`;
+        }
+
         function loadTasks() {
             const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            savedTasks.forEach(task => {
-                createTaskElement(task.text, task.completed);
-            });
+            savedTasks.forEach(task => createTaskElement(task.text, task.completed, task.dueDate, task.category));
+            updateProgress();
         }
 
-        // Function to save tasks to localStorage
         function saveTasks() {
-            const tasks = [];
-            document.querySelectorAll("li").forEach(li => {
-                const taskText = li.querySelector("span").textContent;
-                const completed = li.querySelector("input[type='checkbox']").checked;
-                tasks.push({ text: taskText, completed });
-            });
+            const tasks = Array.from(taskList.children).map(li => ({
+                text: li.querySelector('.task-text').textContent,
+                completed: li.classList.contains('completed'),
+                dueDate: li.dataset.dueDate,
+                category: li.dataset.category
+            }));
             localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateProgress();
         }
 
-        // When 'Add Task' button is clicked
-        addTaskBtn.addEventListener("click", () => {
-            const taskText = taskInput.value.trim();
-            if (taskText) {
-                createTaskElement(taskText);
-                taskInput.value = ""; // Reset input field
-                saveTasks(); // Save tasks to localStorage
+        function createTaskElement(text, completed = false, dueDate = '', category = 'Work') {
+            const li = document.createElement('li');
+            li.dataset.dueDate = dueDate;
+            li.dataset.category = category;
+            li.innerHTML = `
+                <input type="checkbox" ${completed ? 'checked' : ''}>
+                <div class="task-content">
+                    <span class="task-text">${text}</span>
+                    <span class="task-meta">
+                        ${dueDate ? `Due: ${new Date(dueDate).toLocaleDateString()}` : ''}
+                        ${category ? `| ${category}` : ''}
+                    </span>
+                </div>
+                <button class="delete-btn">✖</button>
+            `;
+            if (completed) li.classList.add('completed');
+            taskList.appendChild(li);
+
+            li.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+                li.classList.toggle('completed', e.target.checked);
+                saveTasks();
+            });
+
+            li.querySelector('.delete-btn').addEventListener('click', () => {
+                li.remove();
+                saveTasks();
+            });
+        }
+
+        addTaskBtn.addEventListener('click', () => {
+            const text = taskInput.value.trim();
+            const dueDate = dueDateInput.value;
+            const category = categorySelect.value;
+            if (text) {
+                createTaskElement(text, false, dueDate, category);
+                taskInput.value = '';
+                dueDateInput.value = '';
+                saveTasks();
             }
         });
 
-        // Function to create a task element and add it to the list
-        function createTaskElement(taskText, completed = false) {
-            const li = document.createElement("li");
-            li.innerHTML = `
-                <label>
-                    <input type="checkbox" ${completed ? 'checked' : ''} />
-                    <span>${taskText}</span>
-                </label>
-                <button class="delete-btn">✖</button>
-            `;
-            taskList.appendChild(li);
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTaskBtn.click();
+        });
 
-            // Toggle task completion when checkbox is changed
-            li.querySelector("input[type='checkbox']").addEventListener("change", (e) => {
-                const taskSpan = li.querySelector("span");
-                taskSpan.classList.toggle("completed", e.target.checked);
-                saveTasks(); // Update localStorage after completion change
-            });
-
-            // Remove task when delete button is clicked
-            li.querySelector(".delete-btn").addEventListener("click", () => {
-                taskList.removeChild(li);
-                saveTasks(); // Update localStorage after deletion
-            });
-        }
-
-        // Load tasks when the page loads
         loadTasks();
     </script>
 </body>
-
 </html>
