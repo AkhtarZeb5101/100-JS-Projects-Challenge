@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XeB's Advance Calculator with Currency Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+        }
+
+        .calculator-container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: rgba(255, 165, 0, 0.3);
+        }
+
+        .display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+            min-height: 100px;
+        }
+
+        .previous-operand {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.2rem;
+            min-height: 24px;
+        }
+
+        .current-operand {
+            color: white;
+            font-size: 2.5rem;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .base-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .base-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .base-btn.active {
+            background: rgba(100, 149, 237, 0.3);
+        }
+
+        .currency-converter {
+            margin-top: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .currency-select {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .currency-select:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .currency-result {
+            color: white;
+            font-size: 1.2rem;
+            text-align: right;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .buttons {
+            display: grid;
+            gap: 10px;
+        }
+
+        .scientific-pad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .basic-pad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .operator {
+            background: rgba(255, 165, 0, 0.2);
+        }
+
+        .function {
+            background: rgba(100, 149, 237, 0.2);
+            font-size: 1rem;
+        }
+
+        .equals {
+            background: rgba(50, 205, 50, 0.2);
+        }
+
+        .history-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            color: white;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .history-header button {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        .history-content {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .history-expression {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .history-result {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+
+            .history-panel {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .scientific-pad {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator">
+            <div class="mode-toggle">
+                <button class="mode-btn active" data-mode="basic">Basic</button>
+                <button class="mode-btn" data-mode="scientific">Scientific</button>
+                <button class="mode-btn" data-mode="programmer">Programmer</button>
+                <button class="mode-btn" data-mode="currency">Currency</button>
+            </div>
+
+            <div class="display">
+                <div class="previous-operand"></div>
+                <div class="current-operand">0</div>
+            </div>
+
+            <div class="base-selector" style="display: none;">
+                <button class="base-btn active" data-base="DEC">DEC</button>
+                <button class="base-btn" data-base="HEX">HEX</button>
+                <button class="base-btn" data-base="OCT">OCT</button>
+                <button class="base-btn" data-base="BIN">BIN</button>
+            </div>
+
+            <div class="currency-converter">
+                <select class="currency-select" id="fromCurrency">
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro (Germany)</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="SAR">SAR - Saudi Riyal</option>
+                    <option value="QAR">QAR - Qatari Riyal</option>
+                    <option value="AED">AED - UAE Dirham (Dubai)</option>
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="PKR">PKR - Pakistani Rupee</option>
+                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                    <option value="BHD">BHD - Bahraini Dinar</option>
+                    <option value="KWD">KWD - Kuwaiti Dinar</option>
+                </select>
+                <select class="currency-select" id="toCurrency">
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro (Germany)</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="SAR">SAR - Saudi Riyal</option>
+                    <option value="QAR">QAR - Qatari Riyal</option>
+                    <option value="AED">AED - UAE Dirham (Dubai)</option>
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="PKR">PKR - Pakistani Rupee</option>
+                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                    <option value="BHD">BHD - Bahraini Dinar</option>
+                    <option value="KWD">KWD - Kuwaiti Dinar</option>
+                </select>
+                <div class="currency-result">Result: 0</div>
+            </div>
+
+            <div class="buttons">
+                <div class="scientific-pad" style="display: none;">
+                    <button class="function" data-action="factorial">x!</button>
+                    <button class="function" data-action="power2">x²</button>
+                    <button class="function" data-action="power3">x³</button>
+                    <button class="function" data-action="powerY">xʸ</button>
+                    <button class="function" data-action="sin">sin</button>
+                    <button class="function" data-action="cos">cos</button>
+                    <button class="function" data-action="tan">tan</button>
+                    <button class="function" data-action="ln">ln</button>
+                    <button class="function" data-action="log">log</button>
+                    <button class="function" data-action="exp">exp</button>
+                    <button class="function" data-action="pi">π</button>
+                    <button class="function" data-action="e">e</button>
+                    <button class="function" data-action="rad">Rad</button>
+                    <button class="function" data-action="deg">Deg</button>
+                    <button class="function" data-action="inverse">1/x</button>
+                </div>
+
+                <div class="basic-pad">
+                    <button class="operator" data-action="clear">C</button>
+                    <button class="operator" data-action="delete">⌫</button>
+                    <button class="operator" data-action="percentage">%</button>
+                    <button class="operator" data-operation="÷">÷</button>
+
+                    <button class="number" data-number="7">7</button>
+                    <button class="number" data-number="8">8</button>
+                    <button class="number" data-number="9">9</button>
+                    <button class="operator" data-operation="×">×</button>
+
+                    <button class="number" data-number="4">4</button>
+                    <button class="number" data-number="5">5</button>
+                    <button class="number" data-number="6">6</button>
+                    <button class="operator" data-operation="-">-</button>
+
+                    <button class="number" data-number="1">1</button>
+                    <button class="number" data-number="2">2</button>
+                    <button class="number" data-number="3">3</button>
+                    <button class="operator" data-operation="+">+</button>
+
+                    <button class="number" data-number="0">0</button>
+                    <button class="number" data-number=".">.</button>
+                    <button class="operator" data-action="sqrt">√</button>
+                    <button class="operator equals" data-action="compute">=</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <div class="history-header">
+                <h3>History</h3>
+                <button class="clear-history" data-action="clearHistory">Clear History</button>
+            </div>
+            <div class="history-content"></div>
+        </div>
+    </div>
+
+    <script>
+        class ScientificCalculator {
+            constructor() {
+                this.previousOperand = '';
+                this.currentOperand = '0';
+                this.operation = undefined;
+                this.history = [];
+                this.mode = 'basic';
+                this.angleMode = 'deg';
+                this.base = 'DEC';
+                // Exchange rates (mock data - approximate as of Feb 2025)
+                this.exchangeRates = {
+                    USD: 1,        // US Dollar
+                    EUR: 0.85,     // Euro (Germany)
+                    GBP: 0.73,     // British Pound
+                    JPY: 110.25,   // Japanese Yen
+                    SAR: 3.75,     // Saudi Riyal
+                    QAR: 3.64,     // Qatari Riyal
+                    AED: 3.67,     // UAE Dirham (Dubai)
+                    INR: 83.50,    // Indian Rupee
+                    PKR: 278.00,   // Pakistani Rupee
+                    MYR: 4.20,     // Malaysian Ringgit
+                    BHD: 0.38,     // Bahraini Dinar
+                    KWD: 0.31      // Kuwaiti Dinar
+                };
+                this.fromCurrency = 'USD';
+                this.toCurrency = 'USD';
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                document.querySelectorAll('.mode-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.setMode(button.dataset.mode);
+                    });
+                });
+
+                document.querySelectorAll('.base-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.setBase(button.dataset.base);
+                    });
+                });
+
+                document.querySelectorAll('[data-number]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.appendNumber(button.dataset.number);
+                    });
+                });
+
+                document.querySelectorAll('[data-operation]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.chooseOperation(button.dataset.operation);
+                    });
+                });
+
+                document.querySelectorAll('[data-action]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const action = button.dataset.action;
+                        switch(action) {
+                            case 'clear':
+                                this.clear();
+                                break;
+                            case 'delete':
+                                this.delete();
+                                break;
+                            case 'percentage':
+                                this.percentage();
+                                break;
+                            case 'sqrt':
+                                this.sqrt();
+                                break;
+                            case 'compute':
+                                this.compute();
+                                break;
+                            case 'power2':
+                                this.power2();
+                                break;
+                            case 'power3':
+                                this.power3();
+                                break;
+                            case 'powerY':
+                                this.powerY();
+                                break;
+                            case 'factorial':
+                                this.factorial();
+                                break;
+                            case 'sin':
+                                this.sin();
+                                break;
+                            case 'cos':
+                                this.cos();
+                                break;
+                            case 'tan':
+                                this.tan();
+                                break;
+                            case 'ln':
+                                this.ln();
+                                break;
+                            case 'log':
+                                this.log();
+                                break;
+                            case 'exp':
+                                this.exp();
+                                break;
+                            case 'pi':
+                                this.pi();
+                                break;
+                            case 'e':
+                                this.e();
+                                break;
+                            case 'rad':
+                                this.rad();
+                                break;
+                            case 'deg':
+                                this.deg();
+                                break;
+                            case 'inverse':
+                                this.inverse();
+                                break;
+                            case 'clearHistory':
+                                this.clearHistory();
+                                break;
+                        }
+                    });
+                });
+
+                document.getElementById('fromCurrency').addEventListener('change', (e) => {
+                    this.fromCurrency = e.target.value;
+                    this.convertCurrency();
+                });
+
+                document.getElementById('toCurrency').addEventListener('change', (e) => {
+                    this.toCurrency = e.target.value;
+                    this.convertCurrency();
+                });
+            }
+
+            setMode(mode) {
+                this.mode = mode;
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+                const scientificPad = document.querySelector('.scientific-pad');
+                const baseSelector = document.querySelector('.base-selector');
+                const currencyConverter = document.querySelector('.currency-converter');
+                const basicPad = document.querySelector('.basic-pad');
+
+                scientificPad.style.display = mode === 'scientific' ? 'grid' : 'none';
+                baseSelector.style.display = mode === 'programmer' ? 'flex' : 'none';
+                currencyConverter.style.display = mode === 'currency' ? 'flex' : 'none';
+                basicPad.style.display = mode !== 'currency' ? 'grid' : 'none';
+
+                if (mode === 'programmer') {
+                    this.currentOperand = Math.floor(parseFloat(this.currentOperand)).toString();
+                }
+                if (mode === 'currency') {
+                    this.convertCurrency();
+                }
+                this.updateDisplay();
+            }
+
+            convertCurrency() {
+                const amount = parseFloat(this.currentOperand) || 0;
+                const fromRate = this.exchangeRates[this.fromCurrency];
+                const toRate = this.exchangeRates[this.toCurrency];
+
+                const result = (amount / fromRate) * toRate;
+                const formattedResult = result.toFixed(2);
+
+                document.querySelector('.currency-result').textContent =
+                    `Result: ${formattedResult} ${this.toCurrency}`;
+
+                this.addToHistory(
+                    `${amount} ${this.fromCurrency} to ${this.toCurrency}`,
+                    formattedResult
+                );
+            }
+
+            setBase(base) {
+                const currentNum = this.getCurrentBaseValue();
+                this.base = base;
+
+                document.querySelectorAll('.base-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-base="${base}"]`).classList.add('active');
+
+                this.currentOperand = this.convertToBase(currentNum, base);
+                this.updateDisplay();
+            }
+
+            getCurrentBaseValue() {
+                let decimal;
+                switch(this.base) {
+                    case 'HEX':
+                        decimal = parseInt(this.currentOperand, 16);
+                        break;
+                    case 'OCT':
+                        decimal = parseInt(this.currentOperand, 8);
+                        break;
+                    case 'BIN':
+                        decimal = parseInt(this.currentOperand, 2);
+                        break;
+                    default: // DEC
+                        decimal = parseInt(this.currentOperand, 10);
+                }
+                return isNaN(decimal) ? 0 : decimal;
+            }
+
+            convertToBase(decimal, base) {
+                switch(base) {
+                    case 'HEX':
+                        return decimal.toString(16).toUpperCase();
+                    case 'OCT':
+                        return decimal.toString(8);
+                    case 'BIN':
+                        return decimal.toString(2);
+                    default: // DEC
+                        return decimal.toString(10);
+                }
+            }
+
+            clear() {
+                this.previousOperand = '';
+                this.currentOperand = '0';
+                this.operation = undefined;
+                this.updateDisplay();
+                if (this.mode === 'currency') this.convertCurrency();
+            }
+
+            delete() {
+                if (this.currentOperand === '0') return;
+                this.currentOperand = this.currentOperand.toString().slice(0, -1);
+                if (this.currentOperand === '') this.currentOperand = '0';
+                this.updateDisplay();
+                if (this.mode === 'currency') this.convertCurrency();
+            }
+
+            appendNumber(number) {
+                if (this.mode === 'programmer') {
+                    if (this.base !== 'DEC' && number === '.') return;
+                    const valid = this.validateBaseInput(number);
+                    if (!valid) return;
+                }
+
+                if (number === '.' && this.currentOperand.includes('.')) return;
+                if (this.currentOperand === '0' && number !== '.') {
+                    this.currentOperand = number;
+                } else {
+                    this.currentOperand = this.currentOperand.toString() + number;
+                }
+                this.updateDisplay();
+                if (this.mode === 'currency') this.convertCurrency();
+            }
+
+            validateBaseInput(number) {
+                switch(this.base) {
+                    case 'BIN':
+                        return /[0-1]/.test(number);
+                    case 'OCT':
+                        return /[0-7]/.test(number);
+                    case 'HEX':
+                        return /[0-9A-Fa-f]/.test(number);
+                    default: // DEC
+                        return /[0-9.]/.test(number);
+                }
+            }
+
+            chooseOperation(operation) {
+                if (this.currentOperand === '') return;
+                if (this.previousOperand !== '') {
+                    this.compute();
+                }
+                this.operation = operation;
+                this.previousOperand = this.currentOperand;
+                this.currentOperand = '0';
+                this.updateDisplay();
+            }
+
+            compute() {
+                let computation;
+                let prev, current;
+
+                if (this.mode === 'programmer') {
+                    prev = this.getCurrentBaseValue();
+                    current = this.getCurrentBaseValue();
+                } else {
+                    prev = parseFloat(this.previousOperand);
+                    current = parseFloat(this.currentOperand);
+                }
+
+                if (isNaN(prev) || isNaN(current)) return;
+
+                switch (this.operation) {
+                    case '+':
+                        computation = prev + current;
+                        break;
+                    case '-':
+                        computation = prev - current;
+                        break;
+                    case '×':
+                        computation = prev * current;
+                        break;
+                    case '÷':
+                        computation = prev / current;
+                        break;
+                    case '^':
+                        computation = Math.pow(prev, current);
+                        break;
+                    default:
+                        return;
+                }
+
+                if (this.mode === 'programmer') {
+                    computation = Math.floor(computation);
+                    this.currentOperand = this.convertToBase(computation, this.base);
+                } else {
+                    this.currentOperand = computation.toString();
+                }
+
+                const expression = `${this.previousOperand} ${this.operation} ${this.currentOperand}`;
+                this.addToHistory(expression, this.currentOperand);
+
+                this.operation = undefined;
+                this.previousOperand = '';
+                this.updateDisplay();
+            }
+
+            power2() {
+                const num = parseFloat(this.currentOperand);
+                const result = Math.pow(num, 2);
+                this.addToHistory(`${num}²`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            power3() {
+                const num = parseFloat(this.currentOperand);
+                const result = Math.pow(num, 3);
+                this.addToHistory(`${num}³`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            powerY() {
+                this.chooseOperation('^');
+            }
+
+            sqrt() {
+                const num = parseFloat(this.currentOperand);
+                if (num < 0) {
+                    this.currentOperand = 'Error';
+                } else {
+                    const result = Math.sqrt(num);
+                    this.addToHistory(`√${num}`, result);
+                    this.currentOperand = result.toString();
+                }
+                this.updateDisplay();
+            }
+
+            percentage() {
+                const current = parseFloat(this.currentOperand);
+                if (isNaN(current)) return;
+                this.currentOperand = (current / 100).toString();
+                this.updateDisplay();
+            }
+
+            factorial() {
+                const n = parseInt(this.currentOperand);
+                if (n < 0) return;
+                let result = 1;
+                for (let i = 2; i <= n; i++) result *= i;
+                this.addToHistory(`${n}!`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            sin() {
+                const num = this.angleMode === 'deg' ?
+                    parseFloat(this.currentOperand) * Math.PI / 180 :
+                    parseFloat(this.currentOperand);
+                const result = Math.sin(num);
+                this.addToHistory(`sin(${this.currentOperand})`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            cos() {
+                const num = this.angleMode === 'deg' ?
+                    parseFloat(this.currentOperand) * Math.PI / 180 :
+                    parseFloat(this.currentOperand);
+                const result = Math.cos(num);
+                this.addToHistory(`cos(${this.currentOperand})`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            tan() {
+                const num = this.angleMode === 'deg' ?
+                    parseFloat(this.currentOperand) * Math.PI / 180 :
+                    parseFloat(this.currentOperand);
+                const result = Math.tan(num);
+                this.addToHistory(`tan(${this.currentOperand})`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            ln() {
+                const result = Math.log(parseFloat(this.currentOperand));
+                this.addToHistory(`ln(${this.currentOperand})`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            log() {
+                const result = Math.log10(parseFloat(this.currentOperand));
+                this.addToHistory(`log(${this.currentOperand})`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            exp() {
+                const result = Math.exp(parseFloat(this.currentOperand));
+                this.addToHistory(`e^${this.currentOperand}`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            pi() {
+                this.currentOperand = Math.PI.toString();
+                this.updateDisplay();
+            }
+
+            e() {
+                this.currentOperand = Math.E.toString();
+                this.updateDisplay();
+            }
+
+            rad() {
+                this.angleMode = 'rad';
+                document.querySelector('[data-action="rad"]').classList.add('active');
+                document.querySelector('[data-action="deg"]').classList.remove('active');
+            }
+
+            deg() {
+                this.angleMode = 'deg';
+                document.querySelector('[data-action="deg"]').classList.add('active');
+                document.querySelector('[data-action="rad"]').classList.remove('active');
+            }
+
+            inverse() {
+                const result = 1 / parseFloat(this.currentOperand);
+                this.addToHistory(`1/${this.currentOperand}`, result);
+                this.currentOperand = result.toString();
+                this.updateDisplay();
+            }
+
+            addToHistory(expression, result) {
+                this.history.unshift({ expression, result });
+                this.updateHistory();
+            }
+
+            clearHistory() {
+                this.history = [];
+                this.updateHistory();
+            }
+
+            updateHistory() {
+                const historyContent = document.querySelector('.history-content');
+                historyContent.innerHTML = '';
+
+                this.history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <div class="history-expression">${item.expression}</div>
+                        <div class="history-result">${item.result}</div>
+                    `;
+                    historyItem.addEventListener('click', () => {
+                        this.currentOperand = item.result.toString();
+                        this.updateDisplay();
+                        if (this.mode === 'currency') this.convertCurrency();
+                    });
+                    historyContent.appendChild(historyItem);
+                });
+            }
+
+            updateDisplay() {
+                let displayNum = this.currentOperand;
+                if (this.mode === 'programmer' && this.base !== 'DEC') {
+                    const num = this.getCurrentBaseValue();
+                    displayNum = this.convertToBase(num, this.base);
+                }
+                document.querySelector('.current-operand').textContent = displayNum;
+                document.querySelector('.previous-operand').textContent =
+                    this.operation ? `${this.previousOperand} ${this.operation}` : '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.calculator = new ScientificCalculator();
+        });
+    </script>
+</body>
+</html>
