@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Color Picker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 600px; /* Increased to accommodate larger wheel */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            color: #00ddeb;
+            text-shadow: 0 0 10px rgba(0, 221, 235, 0.3);
+            font-size: 1.8rem;
+        }
+
+        .color-wheel {
+            position: relative;
+            width: 250px; /* Increased size */
+            height: 250px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .picker {
+            position: absolute;
+            width: 12px; /* Slightly larger picker for visibility */
+            height: 12px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: #ccc;
+            text-align: center;
+        }
+
+        input {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.9rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .current-color {
+            width: 100%;
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .copy-btn {
+            background: #00ddeb;
+            color: #fff;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #00b8c4;
+            transform: translateY(-2px);
+        }
+
+        .history {
+            margin-top: 1.5rem;
+        }
+
+        .history h2 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            text-align: center;
+        }
+
+        .history-colors {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .history-item {
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-item:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1rem; max-width: 100%; }
+            .color-wheel { width: 200px; height: 200px; }
+            .inputs { grid-template-columns: 1fr; gap: 0.8rem; }
+            .current-color { height: 40px; font-size: 1rem; }
+            .history-item { width: 30px; height: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Color Picker</h1>
+        <div class="color-wheel" id="colorWheel">
+            <canvas id="canvas"></canvas>
+            <div class="picker" id="picker"></div>
+        </div>
+        <div class="current-color" id="currentColor">#FFFFFF</div>
+        <div class="inputs">
+            <div class="input-group">
+                <label>HEX</label>
+                <input type="text" id="hexInput" value="#FFFFFF">
+            </div>
+            <div class="input-group">
+                <label>RGB</label>
+                <input type="text" id="rgbInput" value="255, 255, 255">
+            </div>
+            <div class="input-group">
+                <label>HSV</label>
+                <input type="text" id="hsvInput" value="0, 0%, 100%">
+            </div>
+        </div>
+        <button class="copy-btn" onclick="copyColor()">Copy HEX</button>
+        <div class="history">
+            <h2>Color History</h2>
+            <div class="history-colors" id="historyColors"></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const colorWheel = document.getElementById('colorWheel');
+        const picker = document.getElementById('picker');
+        const currentColor = document.getElementById('currentColor');
+        const hexInput = document.getElementById('hexInput');
+        const rgbInput = document.getElementById('rgbInput');
+        const hsvInput = document.getElementById('hsvInput');
+        const historyColors = document.getElementById('historyColors');
+        let colorHistory = JSON.parse(localStorage.getItem('colorHistory')) || [];
+
+        // Set canvas size
+        canvas.width = 250; // Increased size
+        canvas.height = 250;
+
+        // Draw color wheel with more colors including dark shades
+        function drawColorWheel() {
+            const radius = canvas.width / 2;
+            const centerX = radius;
+            const centerY = radius;
+
+            const imageData = ctx.createImageData(canvas.width, canvas.height);
+            const data = imageData.data;
+
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const dx = x - centerX;
+                    const dy = y - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance <= radius) {
+                        let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                        if (angle < 0) angle += 360;
+                        const h = angle;
+                        const s = Math.min(distance / radius, 1) * 100;
+                        // Value decreases from 100% at edge to 0% at center for darker colors
+                        const v = Math.min(distance / radius, 1) * 100;
+
+                        const [r, g, b] = hsvToRgb(h, s, v);
+                        const index = (y * canvas.width + x) * 4;
+                        data[index] = r;
+                        data[index + 1] = g;
+                        data[index + 2] = b;
+                        data[index + 3] = 255; // Full opacity within circle
+                    } else {
+                        const index = (y * canvas.width + x) * 4;
+                        data[index + 3] = 0; // Transparent outside circle
+                    }
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        drawColorWheel();
+
+        function rgbToHex(r, g, b) {
+            return `#${[r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('')}`.toUpperCase();
+        }
+
+        function rgbToHsv(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, v = max;
+            const d = max - min;
+            s = max === 0 ? 0 : d / max;
+            if (max === min) h = 0;
+            else {
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return [Math.round(h * 360), Math.round(s * 100), Math.round(v * 100)];
+        }
+
+        function hsvToRgb(h, s, v) {
+            h /= 360; s /= 100; v /= 100;
+            const i = Math.floor(h * 6);
+            const f = h * 6 - i;
+            const p = v * (1 - s);
+            const q = v * (1 - f * s);
+            const t = v * (1 - (1 - f) * s);
+            let r, g, b;
+            switch (i % 6) {
+                case 0: r = v; g = t; b = p; break;
+                case 1: r = q; g = v; b = p; break;
+                case 2: r = p; g = v; b = t; break;
+                case 3: r = p; g = q; b = v; break;
+                case 4: r = t; g = p; b = v; break;
+                case 5: r = v; g = p; b = q; break;
+            }
+            return [r * 255, g * 255, b * 255];
+        }
+
+        function updateColor(x, y) {
+            const rect = colorWheel.getBoundingClientRect();
+            const canvasX = Math.round(x - rect.left);
+            const canvasY = Math.round(y - rect.top);
+
+            // Ensure coordinates are within bounds
+            if (canvasX < 0 || canvasX >= canvas.width || canvasY < 0 || canvasY >= canvas.height) return;
+
+            const imageData = ctx.getImageData(canvasX, canvasY, 1, 1).data;
+            const [r, g, b, a] = [imageData[0], imageData[1], imageData[2], imageData[3]];
+            if (a === 0) return; // Ignore transparent areas outside the circle
+
+            const hex = rgbToHex(r, g, b);
+            const [h, s, v] = rgbToHsv(r, g, b);
+
+            picker.style.left = `${canvasX}px`;
+            picker.style.top = `${canvasY}px`;
+            currentColor.style.backgroundColor = hex;
+            currentColor.textContent = hex;
+            hexInput.value = hex;
+            rgbInput.value = `${r}, ${g}, ${b}`;
+            hsvInput.value = `${h}, ${s}%, ${v}%`;
+
+            addToHistory(hex);
+        }
+
+        function addToHistory(hex) {
+            if (!colorHistory.includes(hex)) {
+                colorHistory.unshift(hex);
+                if (colorHistory.length > 10) colorHistory.pop();
+                localStorage.setItem('colorHistory', JSON.stringify(colorHistory));
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            historyColors.innerHTML = '';
+            colorHistory.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.style.backgroundColor = color;
+                div.title = color;
+                div.onclick = () => updateFromHex(color);
+                historyColors.appendChild(div);
+            });
+        }
+
+        function updateFromHex(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            const [h, s, v] = rgbToHsv(r, g, b);
+            currentColor.style.backgroundColor = hex;
+            currentColor.textContent = hex;
+            hexInput.value = hex;
+            rgbInput.value = `${r}, ${g}, ${b}`;
+            hsvInput.value = `${h}, ${s}%, ${v}%`;
+            addToHistory(hex);
+        }
+
+        function copyColor() {
+            navigator.clipboard.writeText(hexInput.value);
+            alert('HEX color copied to clipboard: ' + hexInput.value);
+        }
+
+        colorWheel.addEventListener('mousedown', (e) => {
+            updateColor(e.clientX, e.clientY);
+            const moveHandler = (moveE) => updateColor(moveE.clientX, moveE.clientY);
+            document.addEventListener('mousemove', moveHandler);
+            document.addEventListener('mouseup', () => document.removeEventListener('mousemove', moveHandler), { once: true });
+        });
+
+        hexInput.addEventListener('input', () => {
+            if (/^#[0-9A-F]{6}$/i.test(hexInput.value)) updateFromHex(hexInput.value);
+        });
+
+        rgbInput.addEventListener('input', () => {
+            const [r, g, b] = rgbInput.value.split(',').map(Number);
+            if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+                updateFromHex(rgbToHex(r, g, b));
+            }
+        });
+
+        hsvInput.addEventListener('input', () => {
+            const [h, s, v] = hsvInput.value.split(',').map(val => parseFloat(val.replace('%', '')));
+            if (h >= 0 && h <= 360 && s >= 0 && s <= 100 && v >= 0 && v <= 100) {
+                const [r, g, b] = hsvToRgb(h, s, v);
+                updateFromHex(rgbToHex(r, g, b));
+            }
+        });
+
+        // Initial setup
+        updateColor(colorWheel.getBoundingClientRect().left + 125, colorWheel.getBoundingClientRect().top + 125);
+        renderHistory();
+    </script>
+</body>
+</html>

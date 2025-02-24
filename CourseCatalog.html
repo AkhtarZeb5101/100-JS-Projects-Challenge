@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Course Catalog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+            padding: 2rem;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            color: #00ddeb;
+            text-shadow: 0 0 10px rgba(0, 221, 235, 0.3);
+            font-size: 2.5rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input, select {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            font-size: 1.4rem;
+            color: #00ddeb;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-content p {
+            font-size: 0.9rem;
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-content .category {
+            font-size: 0.8rem;
+            background: rgba(0, 221, 235, 0.2);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .page-btn.active {
+            background: #00ddeb;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content h2 {
+            color: #00ddeb;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content a {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #00ddeb;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content a:hover {
+            background: #00b8c4;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #cc0000;
+        }
+
+        @media (max-width: 600px) {
+            .controls { flex-direction: column; align-items: center; }
+            .card-container { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+            .container { padding: 1rem; }
+            .modal-content { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Explore Our Latest Courses</h1>
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search courses..." onkeyup="renderCourses()">
+            <select id="categoryFilter" onchange="renderCourses()">
+                <option value="All">All Categories</option>
+                <option value="Web Development">Web Development</option>
+                <option value="JavaScript Frameworks">JavaScript Frameworks</option>
+                <option value="Backend Development">Backend Development</option>
+            </select>
+        </div>
+        <div class="card-container" id="card-container"></div>
+        <div class="pagination" id="pagination"></div>
+        <div class="modal" id="courseModal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeModal()">Close</button>
+                <img id="modalImage" src="" alt="">
+                <h2 id="modalTitle"></h2>
+                <p id="modalDescription"></p>
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <a id="modalLink" href="#" target="_blank">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cardData = [
+            { id: 1, title: "HTML, HTML5", image: "https://via.placeholder.com/250x150?text=HTML", description: "Learn the fundamentals of HTML and HTML5 to build the structure of web pages.", link: "https://www.w3schools.com/html/", category: "Web Development" },
+            { id: 2, title: "CSS, CSS3", image: "https://via.placeholder.com/250x150?text=CSS", description: "Master the art of styling web pages with CSS and CSS3 for modern web design.", link: "https://www.w3schools.com/css/", category: "Web Development" },
+            { id: 3, title: "JavaScript Basics", image: "https://via.placeholder.com/250x150?text=JavaScript", description: "Understand the basics of JavaScript and its role in creating dynamic web pages.", link: "https://www.w3schools.com/js/", category: "Web Development" },
+            { id: 4, title: "React JS", image: "https://via.placeholder.com/250x150?text=React", description: "Learn React, one of the most popular JavaScript libraries for building user interfaces.", link: "https://www.w3schools.com/react/", category: "JavaScript Frameworks" },
+            { id: 5, title: "Node JS", image: "https://via.placeholder.com/250x150?text=NodeJS", description: "Explore Node.js and build fast, scalable network applications.", link: "https://www.w3schools.com/nodejs/", category: "Backend Development" },
+            { id: 6, title: "Web Development with MongoDB", image: "https://via.placeholder.com/250x150?text=MongoDB", description: "Store and manage data efficiently using MongoDB, a popular NoSQL database.", link: "https://www.w3schools.com/mongodb/", category: "Backend Development" },
+            { id: 7, title: "Angular Development", image: "https://via.placeholder.com/250x150?text=Angular", description: "Become an expert in building dynamic, single-page applications with Angular.", link: "https://www.w3schools.com/angular/", category: "JavaScript Frameworks" },
+            { id: 8, title: "Web Development with Django", image: "https://via.placeholder.com/250x150?text=Django", description: "Build powerful web applications using Django, a popular Python web framework.", link: "https://www.w3schools.com/django/", category: "Backend Development" },
+            { id: 9, title: "PHP & MySQL", image: "https://via.placeholder.com/250x150?text=PHP+MySQL", description: "Learn how to build dynamic websites and applications using PHP and MySQL.", link: "https://www.w3schools.com/php/", category: "Backend Development" },
+            { id: 10, title: "Laravel Development", image: "https://via.placeholder.com/250x150?text=Laravel", description: "Master the art of web application development with Laravel, a powerful PHP framework.", link: "https://laravel.com/docs/11.x", category: "Backend Development" }
+        ];
+
+        const ITEMS_PER_PAGE = 4;
+        let currentPage = 1;
+
+        function filterCourses() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+
+            return cardData.filter(course => {
+                const matchesSearch = course.title.toLowerCase().includes(searchQuery) ||
+                                    course.description.toLowerCase().includes(searchQuery);
+                const matchesCategory = categoryFilter === 'All' || course.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+        }
+
+        function renderCourses() {
+            const filteredCourses = filterCourses();
+            const totalPages = Math.ceil(filteredCourses.length / ITEMS_PER_PAGE);
+            currentPage = Math.min(currentPage, totalPages || 1);
+
+            const cardContainer = document.getElementById('card-container');
+            cardContainer.innerHTML = '';
+
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const paginatedCourses = filteredCourses.slice(start, end);
+
+            paginatedCourses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${course.image}" alt="${course.title}">
+                    <div class="card-content">
+                        <h3>${course.title}</h3>
+                        <p>${course.description}</p>
+                        <span class="category">${course.category}</span>
+                    </div>
+                `;
+                card.addEventListener('click', () => openModal(course));
+                cardContainer.appendChild(card);
+            });
+
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = 'Previous';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderCourses();
+                }
+            });
+            pagination.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'page-btn';
+                btn.textContent = i;
+                if (i === currentPage) btn.classList.add('active');
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderCourses();
+                });
+                pagination.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = 'Next';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderCourses();
+                }
+            });
+            pagination.appendChild(nextBtn);
+        }
+
+        function openModal(course) {
+            document.getElementById('modalImage').src = course.image;
+            document.getElementById('modalTitle').textContent = course.title;
+            document.getElementById('modalDescription').textContent = course.description;
+            document.getElementById('modalCategory').textContent = course.category;
+            document.getElementById('modalLink').href = course.link;
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('courseModal').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('courseModal').style.display === 'flex') {
+                closeModal();
+            }
+        });
+
+        // Initial render
+        renderCourses();
+    </script>
+</body>
+</html>
