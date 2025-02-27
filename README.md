@@ -35,3 +35,15 @@
 (33) -> Recipe Finder<br>
 (34) -> Sign Up Form with Encrypted Passwords<br>
 (35) -> Advance Image Slider<br>
+(36) -> ProductCards<br>
+(37) -> Random Joke Generator<br>
+(38) -> Flashcard App<br>
+(39) -> Product Filter<br>
+(40) -> Star Rating<br>
+(41) -> GitHub User Search<br>
+(42) -> Polling App<br>
+(43) -> Virtual Keyboard<br>
+(44) -> Elegant Dictionary<br>
+(45) -> Advanced Rich Text<br>
+(46) -> Word Count App<br>
+(47) -> Wikipedia Viewer<br>
