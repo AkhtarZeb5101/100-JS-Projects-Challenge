@@ -30,3 +30,8 @@
 (28) -> Age Calculator<br>
 (29) -> Weather App with Alerts<br>
 (30) -> Movie Search App<br>
+(31) -> News App<br>
+(32) -> 2048 Game<br>
+(33) -> Recipe Finder<br>
+(34) -> Sign Up Form with Encrypted Passwords<br>
+(35) -> Advance Image Slider<br>

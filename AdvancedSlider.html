@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Vibrant Slider</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+            overflow: hidden;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 90%;
+            height: 90%;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(145deg, #ff6b6b, #4ecdc4); /* Vibrant coral to turquoise */
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 1s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            filter: brightness(1.1) saturate(1.2); /* Boost vibrancy */
+            transition: filter 0.3s ease;
+        }
+
+        .slide img:hover {
+            filter: brightness(1.2) saturate(1.4); /* More vibrant on hover */
+        }
+
+        button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 87, 34, 0.7); /* Vibrant orange */
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.5); /* Glow effect */
+        }
+
+        button:hover {
+            background-color: rgba(255, 87, 34, 1);
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.8);
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .dots-container {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            max-width: 60%;
+            scrollbar-width: thin;
+            scrollbar-color: #ffeb3b #f4f4f4;
+            z-index: 10;
+            justify-content: flex-start;
+            padding-top: 10px;
+            align-items: center;
+            scroll-behavior: smooth;
+        }
+
+        .dots-container::-webkit-scrollbar {
+            height: 10px;
+            border-radius: 10px;
+        }
+
+        .dots-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .dots-container::-webkit-scrollbar-thumb {
+            background-color: #ffeb3b; /* Bright yellow */
+            border-radius: 10px;
+        }
+
+        .dot {
+            width: 80px;
+            height: 60px;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .dot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .active {
+            border: 3px solid #ffeb3b; /* Bright yellow */
+            background: linear-gradient(145deg, #ffeb3b, #ff5722); /* Yellow to orange */
+            transform: scale(1.2);
+            box-shadow: 0 6px 15px rgba(255, 235, 59, 0.5); /* Glowing yellow */
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider" id="slider">
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80" alt="Slide 1">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/949587/pexels-photo-949587.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 2">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1511300636408-a63a89df6d46?auto=format&fit=crop&w=1920&q=80" alt="Slide 3">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 4">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1920&q=80" alt="Slide 5">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 6">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1920&q=80" alt="Slide 7">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/1547813/pexels-photo-1547813.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 8">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1920&q=80" alt="Slide 9">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 10">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80" alt="Slide 11">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/1528975/pexels-photo-1528975.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 12">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80" alt="Slide 13">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 14">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=1920&q=80" alt="Slide 15">
+            </div>
+            <div class="slide">
+                <img src="https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Slide 16">
+            </div>
+        </div>
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+        <div class="dots-container" id="dots-container"></div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const dotsContainer = document.getElementById('dots-container');
+
+        function moveSlide(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) {
+                currentIndex = totalSlides - 1;
+            } else if (currentIndex >= totalSlides) {
+                currentIndex = 0;
+            }
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const slider = document.getElementById('slider');
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            updateDots();
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            const activeDot = dots[currentIndex];
+            dotsContainer.scrollTo({
+                left: activeDot.offsetLeft - (dotsContainer.offsetWidth / 2) + (activeDot.offsetWidth / 2),
+                behavior: 'smooth'
+            });
+        }
+
+        function createDots() {
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                const img = document.createElement('img');
+                img.src = slides[i].querySelector('img').src;
+                img.alt = `Dot ${i + 1}`;
+                dot.appendChild(img);
+                dot.addEventListener('click', () => {
+                    currentIndex = i;
+                    updateSlider();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        setInterval(() => {
+            moveSlide(1);
+        }, 3000);
+
+        createDots();
+        updateSlider();
+    </script>
+</body>
+</html>
