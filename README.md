@@ -47,3 +47,37 @@
 (45) -> Advanced Rich Text<br>
 (46) -> Word Count App<br>
 (47) -> Wikipedia Viewer<br>
+(48) -> Advanced Tabs<br>
+(49) -> Drag and Drop Game<br>
+(50) -> Captcha Generator<br>
+(51) -> Advanced Image Editor<br>
+(52) -> Pixel Art Generator<br>
+(53) -> Compact Image Gallery<br>
+(54) -> Advanced QR Code Generator<br>
+(55) -> Enhanced Notes App<br>
+(56) -> Minion Eyes<br>
+(57) -> Dynamic Table Generator<br>
+(58) -> Flip A Coin<br>
+(59) -> Multi-Step Form<br>
+(60) -> Palindrome Checker<br>
+(61) -> Scratch Card<br>
+(62) -> Multi-Language Translator<br>
+(63) -> Percentage Calculator<br>
+(64) -> Image Resize<br>
+(65) -> Advanced Blob Generator<br>
+(66) -> Math Game<br>
+(67) -> Word Assemble Game<br>
+(68) -> Text To Speech Converter<br>
+(69) -> Difference Between 2 Dates<br>
+(70) -> SocialMediaPost<br>
+(71) -> Predict Gender By Name<br>
+(72) -> Hangman Game<br>
+(73) -> Gradient Generator<br>
+(74) -> Loan Calculator<br>
+(75) -> Box Shadow Generator<br>
+(76) -> Word Puzzle Game<br>
+(77) -> Number To Roman Converter<br>
+(78) -> Currency Formatter<br> 
+(79) -> Sliding Puzzle Game<br>
+(80) -> Testimonal Selection<br>
+
