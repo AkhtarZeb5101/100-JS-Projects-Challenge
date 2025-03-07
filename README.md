@@ -80,13 +80,13 @@
 (78) -> Currency Formatter<br> 
 (79) -> Sliding Puzzle Game<br>
 (80) -> Testimonal Selection<br>
-(81) -> Temperature Converter
-(82) -> Fruit Fall Game
-(83) -> Share GIF to Tenor
-(84) -> Grammar Checker
-(85) -> Handwriting Style Generator
-(86) -> Guess the Anime
-(87) -> Aspect Ratio Calculator
-(88) -> Stacked Photo Carousel
-(89) -> Color Palette Generator
-(90) -> Weight Loss Tracker
+(81) -> Temperature Converter<br>
+(82) -> Fruit Fall Game<br>
+(83) -> Share GIF to Tenor<br>
+(84) -> Grammar Checker<br>
+(85) -> Handwriting Style Generator<br>
+(86) -> Guess the Anime<br>
+(87) -> Aspect Ratio Calculator<br>
+(88) -> Stacked Photo Carousel<br>
+(89) -> Color Palette Generator<br>
+(90) -> Weight Loss Tracker<br>
