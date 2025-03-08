@@ -90,6 +90,6 @@
 (88) -> Stacked Photo Carousel<br>
 (89) -> Color Palette Generator<br>
 (90) -> Weight Loss Tracker<br>
-(91) -> Weight Converter
-(92) -> Country Guide
-(93) -> Word Scramble Game
+(91) -> Weight Converter<br>
+(92) -> Country Guide<br>
+(93) -> Word Scramble Game<br>
