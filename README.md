@@ -841,6 +841,35 @@ Welcome to the 100 JavaScript Projects Challenge! This repository contains a com
   - Time challenges
 - **Learning Focus**: Word manipulation, game logic
 
+### 94. Responsive Vertical Tabs
+- **Description**: A responsive vertical tab system for organizing content.
+- **Features**:
+  - Smooth transitions between tabs
+  - Mobile-friendly design
+  - Customizable tab content
+  - Clean and modern user interface
+- **Learning Focus**: Responsive design, CSS transitions, HTML structure
+
+### 95. Event Calendar
+- **Description**: Event scheduling and management calendar
+- **Features**:
+  - Add, edit, and delete events
+  - View events by day, week, or month
+  - Event reminders
+  - Calendar navigation
+- **Learning Focus**: DOM manipulation, date handling, user interface design
+
+### 96. Story Generator
+
+- **Description**: Generates random stories based on user input
+- **Features**:
+   - Customizable story templates
+   - Dynamic user input integration
+   - Randomized elements for unique stories
+   - Option to save and share stories
+- **Learning Focus**: String manipulation, user input handling, DOM manipulation
+
+
 ## Getting Started
 1. Clone the repository
 2. Navigate to desired project folder
