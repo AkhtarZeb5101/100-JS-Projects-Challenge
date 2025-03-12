@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildlife Explorer - Interactive Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .tab-system {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        .tab-nav {
+            background: #2c3e50;
+            padding: 20px 0;
+            min-width: 250px;
+        }
+
+        .tab-button {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab-button.active {
+            background: #3498db;
+        }
+
+        .tab-button.active::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-style: solid;
+            border-width: 10px;
+            border-color: transparent white transparent transparent;
+        }
+
+        .tab-content {
+            flex-grow: 1;
+            padding: 40px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        .tab-content img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-content h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .tab-content h3 {
+            color: #3498db;
+            margin: 20px 0 10px;
+            font-size: 1.3rem;
+        }
+
+        .tab-content p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .facts-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .facts-list li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .facts-list li::before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .tab-system {
+                flex-direction: column;
+            }
+
+            .tab-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 10px;
+                min-width: auto;
+            }
+
+            .tab-button {
+                padding: 10px 20px;
+                white-space: nowrap;
+            }
+
+            .tab-button.active::before {
+                display: none;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Wildlife Explorer</h1>
+            <p>Discover the fascinating world of amazing animals</p>
+        </div>
+        <div class="tab-system">
+            <div class="tab-nav">
+                <button class="tab-button active" data-tab="elephants">Elephants</button>
+                <button class="tab-button" data-tab="tigers">Tigers</button>
+                <button class="tab-button" data-tab="lions">Lions</button>
+                <button class="tab-button" data-tab="pandas">Giant Pandas</button>
+                <button class="tab-button" data-tab="wolves">Gray Wolves</button>
+                <button class="tab-button" data-tab="gorillas">Mountain Gorillas</button>
+                <button class="tab-button" data-tab="dolphins">Dolphins</button>
+                <button class="tab-button" data-tab="penguins">Emperor Penguins</button>
+            </div>
+
+            <div id="elephants" class="tab-content active">
+                <h2>African Elephants</h2>
+                <img src="https://i.natgeofe.com/n/16fc1c64-7589-46da-8350-aa3b01da2152/african-elephant-baby-botswana.jpg" alt="African Elephant">
+                <h3>Overview</h3>
+                <p>African elephants are the world's largest land animals. The two species are the African bush elephant and the smaller African forest elephant.</p>
+
+                <h3>Key Characteristics</h3>
+                <ul class="facts-list">
+                    <li>Weight: Up to 13,000 pounds</li>
+                    <li>Height: Up to 13 feet at the shoulder</li>
+                    <li>Lifespan: 60-70 years</li>
+                    <li>Habitat: Savannas, forests, and deserts</li>
+                </ul>
+
+                <h3>Interesting Facts</h3>
+                <ul class="facts-list">
+                    <li>Their trunks contain about 40,000 muscles</li>
+                    <li>They're excellent swimmers</li>
+                    <li>Females live in family groups led by a matriarch</li>
+                    <li>They can communicate through vibrations in the ground</li>
+                </ul>
+            </div>
+
+            <div id="tigers" class="tab-content">
+                <h2>Bengal Tigers</h2>
+                <img src="https://files.worldwildlife.org/wwfcmsprod/images/Tiger_resting_Bandhavgarh_National_Park_India/hero_small/6aofsvaglm_Medium_WW226365.jpg" alt="Bengal Tiger">
+                <h3>Overview</h3>
+                <p>The Bengal tiger is one of the most iconic big cats, known for its orange coat with black stripes and white underparts.</p>
+
+                <h3>Key Characteristics</h3>
+                <ul class="facts-list">
+                    <li>Weight: 400-700 pounds</li>
+                    <li>Length: Up to 11 feet</li>
+                    <li>Lifespan: 20-25 years</li>
+                    <li>Habitat: Tropical forests, grasslands, and mangrove swamps</li>
+                </ul>
+
+                <h3>Interesting Facts</h3>
+                <ul class="facts-list">
+                    <li>Each tiger has a unique stripe pattern</li>
+                    <li>They can leap up to 20 feet in length</li>
+                    <li>Tigers are excellent swimmers</li>
+                    <li>They can consume up to 88 pounds of meat in one sitting</li>
+                </ul>
+            </div>
+
+            <div id="pandas" class="tab-content">
+                <h2>Giant Pandas</h2>
+                <img src="https://files.worldwildlife.org/wwfcmsprod/images/Giant_Panda_in_Wolong_Sichuan_China/hero_small/6b6vqp9psp_XL_279139.jpg" alt="Giant Panda">
+                <h3>Overview</h3>
+                <p>Giant pandas are beloved worldwide for their distinctive black-and-white coloring and gentle demeanor.</p>
+
+                <h3>Key Characteristics</h3>
+                <ul class="facts-list">
+                    <li>Weight: 150-300 pounds</li>
+                    <li>Height: 2-3 feet when on all fours</li>
+                    <li>Lifespan: 20-30 years</li>
+                    <li>Habitat: Temperate broadleaf and mixed forests in Southwest China</li>
+                </ul>
+
+                <h3>Interesting Facts</h3>
+                <ul class="facts-list">
+                    <li>They eat bamboo for 12-16 hours per day</li>
+                    <li>A newborn panda is 1/900th the size of its mother</li>
+                    <li>They have a unique "thumb" which is actually a modified wrist bone</li>
+                    <li>They can climb trees and are good swimmers</li>
+                </ul>
+            </div>
+
+            <!-- Continue with similar detailed content for other animals... -->
+
+            <div id="wolves" class="tab-content">
+                <h2>Gray Wolves</h2>
+                <img src="https://www.nps.gov/articles/000/images/Gray-Wolf-YELL-Jim-Peaco-960w.jpg" alt="Gray Wolf">
+                <h3>Overview</h3>
+                <p>Gray wolves are apex predators and one of the world's most well-researched animals, known for their complex social structures.</p>
+
+                <h3>Key Characteristics</h3>
+                <ul class="facts-list">
+                    <li>Weight: 70-145 pounds</li>
+                    <li>Length: 4.5-6.5 feet</li>
+                    <li>Lifespan: 12-14 years in the wild</li>
+                    <li>Habitat: Forests, tundra, mountains, and grasslands</li>
+                </ul>
+            </div>
+
+            <div id="gorillas" class="tab-content">
+                <h2>Mountain Gorillas</h2>
+                <img src="https://files.worldwildlife.org/wwfcmsprod/images/Mountain_Gorilla_Silverback_WW22557/hero_small/5yqq3m1yf4_Mountain_Gorilla_Silverback_WW22557.jpg" alt="Mountain Gorilla">
+                <h3>Overview</h3>
+                <p>Mountain gorillas are one of the most majestic and endangered primates, sharing 98% of their DNA with humans.</p>
+
+                <h3>Key Characteristics</h3>
+                <ul class="facts-list">
+                    <li>Weight: 300-400 pounds (males)</li>
+                    <li>Height: Up to 6 feet when standing</li>
+                    <li>Lifespan: 35-40 years</li>
+                    <li>Habitat: Mountain forests of central Africa</li>
+                </ul>
+            </div>
+
+            <!-- Add more animals with similar detailed structure -->
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            function switchTab(tabId) {
+                tabButtons.forEach(button => button.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
+                const selectedContent = document.getElementById(tabId);
+
+                selectedButton.classList.add('active');
+                selectedContent.classList.add('active');
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
