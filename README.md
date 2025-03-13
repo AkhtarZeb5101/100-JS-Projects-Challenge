@@ -869,6 +869,17 @@ Welcome to the 100 JavaScript Projects Challenge! This repository contains a com
    - Option to save and share stories
 - **Learning Focus**: String manipulation, user input handling, DOM manipulation
 
+### 97. Digital Signature Maker
+
+- **Description**: Create your digital signature by drawing or typing
+- **Features**:
+   - Draw signatures on a canvas
+   - Type signatures with customizable fonts
+   - Save and download signatures
+   - Color and line width customization
+   - Signature preview and storage
+- **Learning Focus**: Canvas manipulation, user input handling, local storage management
+
 
 ## Getting Started
 1. Clone the repository
