@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Art Gallery</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #444;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: #ddd;
+            padding: 0.5rem 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode nav {
+            background-color: #555;
+        }
+
+        .dark-mode nav a {
+            color: #f4f4f4;
+        }
+
+        /* Gallery Styles */
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .artwork {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .artwork:hover {
+            transform: translateY(-5px);
+        }
+
+        .artwork img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .artwork-details {
+            padding: 1rem;
+        }
+
+        .artwork-details h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .artwork-details p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .dark-mode .artwork {
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .artwork-details h3,
+        .dark-mode .artwork-details p {
+            color: #ddd;
+        }
+
+        /* Upload Form Styles */
+        #upload-form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #upload-form h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        #upload-form label {
+            display: block;
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+
+        #upload-form input[type="text"],
+        #upload-form textarea,
+        #upload-form input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #upload-form button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #upload-form button:hover {
+            background-color: #449d44;
+        }
+
+        .dark-mode #upload-form {
+            background-color: #444;
+            color: #ddd;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode #upload-form input[type="text"],
+        .dark-mode #upload-form textarea,
+        .dark-mode #upload-form input[type="file"] {
+            background-color: #555;
+            color: #ddd;
+            border-color: #777;
+        }
+
+        /* Dark Mode Toggle */
+        #dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        #dark-mode-toggle:hover {
+            background-color: #555;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #444;
+            color: #fff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            nav a {
+                padding: 0.4rem 0.8rem;
+                margin: 0 0.3rem;
+            }
+
+            #gallery {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                padding: 10px;
+            }
+
+            #upload-form {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="dark-mode-toggle">Toggle Dark Mode</button>
+
+    <header>
+        <h1>Virtual Art Gallery</h1>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#upload-form">Upload Art</a>
+    </nav>
+
+    <section id="gallery">
+        <!-- Artworks will be dynamically added here -->
+    </section>
+
+    <section id="upload-form">
+        <h2>Upload Your Artwork</h2>
+        <label for="artwork-title">Title:</label>
+        <input type="text" id="artwork-title" name="artwork-title" required>
+
+        <label for="artist-name">Artist Name:</label>
+        <input type="text" id="artist-name" name="artist-name" required>
+
+        <label for="artwork-description">Description:</label>
+        <textarea id="artwork-description" name="artwork-description" rows="4" required></textarea>
+
+        <label for="artwork-image">Upload Image:</label>
+        <input type="file" id="artwork-image" name="artwork-image" accept="image/*" required>
+
+        <button onclick="uploadArtwork()">Upload</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Virtual Art Gallery</p>
+    </footer>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+
+        // Load artworks from local storage (if any)
+        let artworks = JSON.parse(localStorage.getItem('artworks')) || [];
+        renderGallery();
+
+        // Dark Mode Toggle Functionality
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('dark-mode', isDarkMode);
+        });
+
+        // Check for dark mode preference in local storage
+        if (localStorage.getItem('dark-mode') === 'true') {
+            body.classList.add('dark-mode');
+        }
+
+        function uploadArtwork() {
+            const title = document.getElementById('artwork-title').value;
+            const artist = document.getElementById('artist-name').value;
+            const description = document.getElementById('artwork-description').value;
+            const imageFile = document.getElementById('artwork-image').files[0];
+
+            if (!title || !artist || !description || !imageFile) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+
+                const artwork = {
+                    title: title,
+                    artist: artist,
+                    description: description,
+                    imageUrl: imageUrl
+                };
+
+                artworks.push(artwork);
+                localStorage.setItem('artworks', JSON.stringify(artworks));
+                renderGallery();
+
+                // Clear the form
+                document.getElementById('artwork-title').value = '';
+                document.getElementById('artist-name').value = '';
+                document.getElementById('artwork-description').value = '';
+                document.getElementById('artwork-image').value = '';
+            }
+            reader.readAsDataURL(imageFile);
+        }
+
+        function renderGallery() {
+            gallery.innerHTML = ''; // Clear existing gallery
+
+            artworks.forEach(artwork => {
+                const artworkElement = document.createElement('div');
+                artworkElement.classList.add('artwork');
+
+                artworkElement.innerHTML = `
+                    <img src="${artwork.imageUrl}" alt="${artwork.title}">
+                    <div class="artwork-details">
+                        <h3>${artwork.title}</h3>
+                        <p>Artist: ${artwork.artist}</p>
+                        <p>${artwork.description}</p>
+                    </div>
+                `;
+
+                gallery.appendChild(artworkElement);
+            });
+        }
+    </script>
+
+</body>
+</html>

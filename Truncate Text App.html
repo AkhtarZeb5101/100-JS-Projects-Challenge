@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truncate Text App</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4c3; /* Light Yellow Background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 700px;
+            padding: 2rem;
+            background-color: #fff8e1; /* Lighter Yellow */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #795548; /* Brown Header */
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        /* Textarea Styles */
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #a1887f; /* Lighter Brown on Focus */
+            box-shadow: 0 0 5px rgba(161, 136, 127, 0.5);
+        }
+
+        /* Input Styles */
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #a1887f; /* Lighter Brown on Focus */
+            box-shadow: 0 0 5px rgba(161, 136, 127, 0.5);
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #795548; /* Brown Button */
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #6d4c41; /* Darker Brown on Hover */
+        }
+
+        /* Result Styles */
+        #result {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #795548; /* Brown Result Text */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+
+            #result {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Truncate Text App</h1>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+        <input type="number" id="maxLength" placeholder="Enter maximum length" value="50">
+        <button onclick="truncateText()">Truncate</button>
+        <button onclick="copyText()" id="copyButton">Copy Text</button>
+        <button onclick="resetFields()">Reset</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const inputText = document.getElementById('inputText');
+        const maxLengthInput = document.getElementById('maxLength');
+        const resultDiv = document.getElementById('result');
+        const copyButton = document.getElementById('copyButton');
+
+        function truncateText() {
+            const text = inputText.value;
+            const maxLength = parseInt(maxLengthInput.value);
+
+            if (isNaN(maxLength) || maxLength <= 0) {
+                resultDiv.innerText = 'Please enter a valid maximum length.';
+                return;
+            }
+
+            if (text.length <= maxLength) {
+                resultDiv.innerText = text;
+                return;
+            }
+
+            const truncatedText = text.substring(0, maxLength) + '...';
+            resultDiv.innerText = truncatedText;
+        }
+
+        function copyText() {
+            const truncatedText = resultDiv.innerText;
+
+            if (!truncatedText) {
+                alert('No text to copy!');
+                return;
+            }
+
+            navigator.clipboard.writeText(truncatedText)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy text. Please try again.');
+                });
+        }
+
+        function resetFields() {
+            inputText.value = '';
+            maxLengthInput.value = '50';
+            resultDiv.innerText = '';
+        }
+    </script>
+
+</body>
+</html>
