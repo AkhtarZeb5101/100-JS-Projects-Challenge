@@ -880,6 +880,16 @@ Welcome to the 100 JavaScript Projects Challenge! This repository contains a com
    - Signature preview and storage
 - **Learning Focus**: Canvas manipulation, user input handling, local storage management
 
+### 98. Virtual Art Gallery
+- **Description**: An interactive virtual art gallery
+- **Features**:
+  - Multiple gallery themes
+  - Interactive art pieces
+  - Information panels with artist details
+  - Virtual tours
+- **Learning Focus**: HTML/CSS/JavaScript integration, user interaction, multimedia display
+
+
 
 ## Getting Started
 1. Clone the repository
