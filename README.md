@@ -889,6 +889,15 @@ Welcome to the 100 JavaScript Projects Challenge! This repository contains a com
   - Virtual tours
 - **Learning Focus**: HTML/CSS/JavaScript integration, user interaction, multimedia display
 
+### 99. Random Choice Picker
+
+- **Description**: Tool to randomly pick a choice from a list of options
+- **Features**:
+  - Easy input of multiple choices
+  - Random selection algorithm
+  - Clear and reset options
+  - Visual display of chosen option
+- **Learning Focus**: Array manipulation, randomization, DOM manipulation
 
 
 ## Getting Started
