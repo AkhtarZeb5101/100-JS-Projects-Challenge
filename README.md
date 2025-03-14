@@ -1,3 +1,7 @@
+![head](https://github.com/AkhtarZeb5101/100-JS-Projects-Challenge/blob/main/Projects%20List.png)
+
+
+
 # 100 JavaScript Projects Challenge by XeB🚀
 
 Welcome to the 100 JavaScript Projects Challenge! This repository contains a comprehensive collection of JavaScript projects designed to enhance your coding skills through practical implementation.
