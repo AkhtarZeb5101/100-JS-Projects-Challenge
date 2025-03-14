@@ -899,6 +899,16 @@ Welcome to the 100 JavaScript Projects Challenge! This repository contains a com
   - Visual display of chosen option
 - **Learning Focus**: Array manipulation, randomization, DOM manipulation
 
+### 100. Truncate Text App
+
+- **Description**: A tool to truncate long text strings to a specified length
+- **Features**:
+  - Customizable maximum text length
+  - Option to add ellipsis at the end of truncated text
+  - Real-time text preview
+  - User-friendly interface
+- **Learning Focus**: String manipulation, DOM manipulation, user interface design
+
 
 ## Getting Started
 1. Clone the repository
